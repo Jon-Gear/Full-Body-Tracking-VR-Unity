@@ -1,0 +1,47 @@
+# --- Unity generated ---
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+*_BurstDebugInformation_DoNotShip/
+*_BackUpThisFolder_ButDontShipItWithYourGame/
+sysinfo.txt
+crashlytics-build.properties
+
+# --- IDE / generated project files ---
+/.vs/
+/.vscode/
+/.idea/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+.vsconfig
+
+# --- Builds ---
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# --- Local-only ---
+/_cleanup_backup/
+/Assets/Screenshots/
+/Assets/Screenshots.meta
+
+# --- Commercial asset, must not be redistributed ---
+# Final IK by RootMotion (Asset Store). Only the optional scene in
+# Assets/FullBodyTracking/Experimental needs it. Import it yourself if you want that scene.
+/Assets/Plugins/RootMotion/
+/Assets/Plugins/RootMotion.meta

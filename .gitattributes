@@ -1,0 +1,25 @@
+# Normalise line endings, keep Unity YAML stable
+* text=auto
+
+*.cs      text diff=csharp
+*.md      text
+*.json    text
+*.asmdef  text
+
+*.unity       text eol=lf
+*.prefab      text eol=lf
+*.mat         text eol=lf
+*.asset       text eol=lf
+*.controller  text eol=lf
+*.anim        text eol=lf
+*.meta        text eol=lf
+
+# Binary assets
+*.png   binary
+*.jpg   binary
+*.exr   binary
+*.fbx   binary
+*.wav   binary
+*.mp3   binary
+*.ttf   binary
+*.otf   binary
