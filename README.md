@@ -10,15 +10,12 @@ is decoded with [OscCore](https://github.com/vrchat/OscCore), and is applied wit
 It was built during my internship at SportsImproVR to bring lower-body movement (stepping, crouching, jumping, leg positioning)
 into VR tennis training. Write-up: [Internship at SportsImproVR](https://jon-gear.github.io/work/internship-1-short/).
 
-No trackers? Press Play and a built-in simulator streams real OSC messages, so you can see the whole pipeline working:
-
-![Desktop demo with the OSC simulator](Docs/images/demo-overview.png)
 
 ## How it works
 
 The headset only knows about the head and hands. This project adds the rest of the body:
 
-![The pipeline, with the part this project builds highlighted](https://jon-gear.github.io/assets/images/internship-1/diagrams/highlighting-what-i-needed.png)
+![The pipeline, with the part this project builds highlighted](https://jon-gear.github.io/assets/images/internship-1/diagrams/what-actually-happened.png)
 
 1. **HaritoraX2** trackers connect to a smartphone over Bluetooth.
 2. **Shiftall VR Manager** on the phone handles calibration and pose estimation, and turns the raw IMU data into a body pose.
@@ -33,11 +30,14 @@ tracker app --UDP/OSC--> OscServer (OscCore) --> OscFullBodyIKController --> Ani
                                          headset + controllers (XR rig or simulated)
 ```
 
-![HaritoraX2 trackers worn on the body](https://jon-gear.github.io/assets/images/internship-1/using_haritora_trackers.jpg)
-
 This mirrors the pipeline VRChat uses, which is how the hardware was verified first:
 
 ![VRChat's tracking pipeline](https://jon-gear.github.io/assets/images/internship-1/diagrams/vr-chat-diagram.png)
+
+For reference, the same trackers working in VRChat:
+
+![HaritoraX2 trackers working in VRChat](https://jon-gear.github.io/assets/images/internship-1/media/image37.gif)
+
 
 Any sender that speaks the VRChat OSC Trackers protocol should work the same way, not only HaritoraX2.
 
@@ -79,6 +79,9 @@ The panel also shows the address the app listens on (for example `192.168.1.23:9
 
 ## Using real trackers
 
+![The avatar following real trackers](https://jon-gear.github.io/assets/images/internship-1/media/image48.gif)
+
+
 1. **Build and install** the demo scene on the Quest (Android build target). With a headset connected the scene switches to XR mode on its own,
    the simulator goes quiet, and a status label appears in the world.
 2. **Put the phone and the headset on the same Wi-Fi network.**
@@ -86,7 +89,6 @@ The panel also shows the address the app listens on (for example `192.168.1.23:9
    The IP and port are shown in the status label. Testing in the editor on the same PC? Use `127.0.0.1`.
 4. Wear the trackers and calibrate in Shiftall VR Manager. The status label shows each tracker turning green when data arrives.
 
-   ![The avatar following real trackers](https://jon-gear.github.io/assets/images/internship-1/media/image48.gif)
 
 ### Tracker numbering
 
@@ -136,9 +138,6 @@ If something is not working, test the pipeline in small steps instead of going s
 
    ![Applying tracker targets with IK](https://jon-gear.github.io/assets/images/internship-1/diagrams/adding-ik.png)
 
-For reference, the same trackers working in VRChat:
-
-![HaritoraX2 trackers working in VRChat](https://jon-gear.github.io/assets/images/internship-1/media/image37.gif)
 
 ### How positions are aligned
 
