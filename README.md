@@ -35,7 +35,24 @@ tracker app --UDP/OSC--> OscServer (OscCore) --> OscFullBodyIKController --> Ani
 
 ![HaritoraX2 trackers worn on the body](https://jon-gear.github.io/assets/images/internship-1/using_haritora_trackers.jpg)
 
+This mirrors the pipeline VRChat uses, which is how the hardware was verified first:
+
+![VRChat's tracking pipeline](https://jon-gear.github.io/assets/images/internship-1/diagrams/vr-chat-diagram.png)
+
 Any sender that speaks the VRChat OSC Trackers protocol should work the same way, not only HaritoraX2.
+
+## Why HaritoraX2?
+
+Before building this I compared the main kinds of full-body tracking for a standalone Quest sports app. XSens DOT trackers were tried first, but they only give reliable **orientation**: their position drifts, and they have no pose-estimation layer, so every rotation would have needed custom skeleton code tied to one vendor.
+
+| Technology | Examples | Verdict for a portable sports-training app |
+|---|---|---|
+| IMU | SlimeVR, HaritoraX2, Sony mocopi | Cheap, portable, no base stations, no occlusion. Drifts over time and needs calibration. |
+| Electromagnetic | FluxPose | Promising absolute positioning, but not production-proven at the time. |
+| Lighthouse | Vive Tracker, Tundra Tracker | Most accurate, but expensive, needs base stations, not portable, can be occluded. |
+| Camera | Kinect with Amethyst | Cheapest and no trackers to wear, but poor with fast movement, turning and leaving the view. |
+
+HaritoraX2 had the best balance. Its **Shiftall VR Manager** already does pose estimation and outputs a skeleton over **OSC**, so the Unity side only has to receive and apply it.
 
 ## Requirements
 
@@ -69,6 +86,8 @@ The panel also shows the address the app listens on (for example `192.168.1.23:9
    The IP and port are shown in the status label. Testing in the editor on the same PC? Use `127.0.0.1`.
 4. Wear the trackers and calibrate in Shiftall VR Manager. The status label shows each tracker turning green when data arrives.
 
+   ![The avatar following real trackers](https://jon-gear.github.io/assets/images/internship-1/media/image48.gif)
+
 ### Tracker numbering
 
 The app expects these OSC addresses (the same ones VRChat uses). Each carries three floats: position in metres, or rotation as Euler angles in degrees, in Unity's coordinate system (+Y up).
@@ -89,6 +108,7 @@ Hands come from the XR controllers and the head from the headset. Missing tracke
 
 ### Troubleshooting
 
+- **`SocketException: Access denied` on the Quest.** The app has no network permission, which looks like OSC simply doing nothing. This project ships a custom `Assets/Plugins/Android/AndroidManifest.xml` with `INTERNET` and `ACCESS_NETWORK_STATE`. Keep it, and make sure your Meta XR / OpenXR build settings do not strip internet permission from the build.
 - **Nothing arrives.** Check that phone and headset are on the same network and the IP matches the one shown. Restricted networks (for example Eduroam)
   can block device-to-device traffic, so use a home network or a phone hotspot.
 - **Port already in use.** VRChat itself listens on 9000. If VRChat runs on the same PC, use another port (`Listen Port` on the controller, and the same port in the sender).
@@ -98,19 +118,25 @@ Hands come from the XR controllers and the head from the headset. Missing tracke
 
 ### Debugging in layers
 
-If something is not working, test the pipeline in small steps instead of going straight to a full character:
+If something is not working, test the pipeline in small steps instead of going straight to a full character. This is how the project was built:
 
-1. Send **one float** (for example from TouchOSC, inspected with Protokol) and use it to move a cube.
+1. **Prove OSC works at all.** Send one float from a phone with [TouchOSC](https://hexler.net/touchosc) to the headset's IP and port, and inspect the traffic with [Protokol](https://hexler.net/protokol).
+
+   ![TouchOSC to Unity test setup](https://jon-gear.github.io/assets/images/internship-1/diagrams/debugging-with-touch-osc.png)
+
+2. **Make one value move something.** Use that float to move a cube.
 
    ![One OSC value moving a cube](https://jon-gear.github.io/assets/images/internship-1/media/image44.gif)
 
-2. Map every tracker address to a cube and watch the "cube man".
+3. **Map every tracker address to a cube** and watch the "cube man" follow your body.
 
    ![Tracker data on debug cubes](https://jon-gear.github.io/assets/images/internship-1/media/image46.gif)
 
-3. Only then apply the targets to a humanoid with IK. The **Markers** switch in this project shows the same tracker targets as coloured spheres.
+4. **Only then apply the targets to a humanoid with IK.** The **Markers** switch in this project shows the same tracker targets as coloured spheres.
 
-For reference, the same trackers working in VRChat, which is how the pipeline was verified first:
+   ![Applying tracker targets with IK](https://jon-gear.github.io/assets/images/internship-1/diagrams/adding-ik.png)
+
+For reference, the same trackers working in VRChat:
 
 ![HaritoraX2 trackers working in VRChat](https://jon-gear.github.io/assets/images/internship-1/media/image37.gif)
 
@@ -133,7 +159,7 @@ Assets/
     Demo/           FBT_Demo.unity and its materials
     Experimental/   FinalIK_VRIK_Test.unity (optional, needs Final IK)
   OscCore-1.1.7/    OSC library (third party, MIT)
-  Plugins/Android/  AndroidManifest for Quest builds
+  Plugins/Android/  AndroidManifest.xml with the INTERNET permission (required for OSC on Quest)
   Samples, VRTemplateAssets, XR, XRI, Settings   Unity XR template content and settings
 Docs/               README images
 ```
@@ -158,6 +184,7 @@ Docs/               README images
 ## Known limitations
 
 - **A phone is required.** Running Shiftall VR Manager directly on the Quest was tried, but it was too slow, so the phone stays in the pipeline.
+- **Setup effort.** Connecting trackers, running Shiftall VR Manager, configuring OSC, making the headset reachable and calibrating the body is fine for development, but a polished product would need to hide this behind a friendlier flow.
 - **Network dependent.** Phone and headset must share a network that allows device-to-device traffic.
 - Tracker rotations are used as sent: identity means *the avatar's rest pose facing +Z*. The app does no calibration of its own, so calibration is left to the sender (Shiftall VR Manager).
 - HeadRelative alignment corrects **position** only. It does not rotate the sender's space to match the headset's yaw (VRChat does this from the head rotation). If your sender's forward direction differs from Unity's, trackers will look rotated.
@@ -166,7 +193,7 @@ Docs/               README images
 
 ## Optional: Final IK test scene
 
-`Assets/FullBodyTracking/Experimental/FinalIK_VRIK_Test.unity` is an experiment with VRIK from Final IK, using hand-posed mock targets.
+`Assets/FullBodyTracking/Experimental/FinalIK_VRIK_Test.unity` is an experiment with VRIK from Final IK, using hand-posed mock targets, explored to get more natural poses. The main demo uses only Unity's Animator IK.
 Final IK is a commercial asset and is **not included** (and is git-ignored). Import it from the Asset Store into `Assets/Plugins/RootMotion` if you want this scene to work.
 
 ## Third-party content
