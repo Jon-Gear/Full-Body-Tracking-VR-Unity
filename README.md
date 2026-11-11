@@ -2,6 +2,8 @@
 
 ![Full-body tracking driving an avatar in real time](https://jon-gear.github.io/assets/images/internship-1/fbt.gif)
 
+
+
 A Unity full-body tracking solution for standalone VR (Meta Quest). Real body trackers drive a humanoid avatar in real time.
 Tracker data arrives over **OSC** using the [VRChat OSC Trackers](https://docs.vrchat.com/docs/osc-trackers) protocol,
 is decoded with [OscCore](https://github.com/vrchat/OscCore), and is applied with Unity's built-in **Animator IK**
