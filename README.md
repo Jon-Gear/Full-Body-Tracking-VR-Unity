@@ -1,6 +1,6 @@
 # VR Full-Body Tracking over OSC
 
-![Full-body tracking driving an avatar in real time](https://jon-gear.github.io/assets/images/internship-1/fbt.gif)
+![Full-body tracking driving an avatar in real time](Docs/gifs/fbt.gif)
 
 
 
@@ -38,7 +38,7 @@ This mirrors the pipeline VRChat uses, which is how the hardware was verified fi
 
 For reference, the same trackers working in VRChat:
 
-![HaritoraX2 trackers working in VRChat](https://jon-gear.github.io/assets/images/internship-1/media/image37.gif)
+![HaritoraX2 trackers working in VRChat](Docs/gifs/haritora-in-vrchat.gif)
 
 
 Any sender that speaks the VRChat OSC Trackers protocol should work the same way, not only HaritoraX2.
@@ -81,7 +81,7 @@ The panel also shows the address the app listens on (for example `192.168.1.23:9
 
 ## Using real trackers
 
-![The avatar following real trackers](https://jon-gear.github.io/assets/images/internship-1/media/image48.gif)
+![The avatar following real trackers](Docs/gifs/avatar-following-trackers.gif)
 
 
 1. **Build and install** the demo scene on the Quest (Android build target). With a headset connected the scene switches to XR mode on its own,
@@ -130,11 +130,11 @@ If something is not working, test the pipeline in small steps instead of going s
 
 2. **Make one value move something.** Use that float to move a cube.
 
-   ![One OSC value moving a cube](https://jon-gear.github.io/assets/images/internship-1/media/image44.gif)
+   ![One OSC value moving a cube](Docs/gifs/osc-cube-test.gif)
 
 3. **Map every tracker address to a cube** and watch the "cube man" follow your body.
 
-   ![Tracker data on debug cubes](https://jon-gear.github.io/assets/images/internship-1/media/image46.gif)
+   ![Tracker data on debug cubes](Docs/gifs/osc-cube-man.gif)
 
 4. **Only then apply the targets to a humanoid with IK.** The **Markers** switch in this project shows the same tracker targets as coloured spheres.
 
